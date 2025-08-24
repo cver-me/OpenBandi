@@ -85,30 +85,41 @@ async function scrapeSource(source, apiKey) {
     return {
       source: source.name,
       tier: source.tier,
+      url: source.url,
+      scraped_at: new Date().toISOString(),
       data: extractResponse.data.data
     };
   } catch (error) {
     console.error(`Error scraping ${source.name}:`, error.message);
-    return null;
+    return {
+      source: source.name,
+      tier: source.tier,
+      url: source.url,
+      scraped_at: new Date().toISOString(),
+      error: error.message
+    };
   }
 }
 
 // Main function to scrape all sources
 async function scrapeAllSources(apiKey) {
+  console.log(`Starting scraping process for ${sources.length} sources...`);
+  
   const results = [];
   
   for (const source of sources) {
     const result = await scrapeSource(source, apiKey);
-    if (result) {
-      results.push(result);
-    }
+    results.push(result);
+    
     // Add a delay to be respectful to the servers
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
   }
   
+  console.log(`Scraping process completed. Processed ${results.length} sources.`);
   return results;
 }
 
 module.exports = {
-  scrapeAllSources
+  scrapeAllSources,
+  sources
 };

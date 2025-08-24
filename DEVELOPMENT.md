@@ -55,12 +55,14 @@ Before you begin, ensure you have the following installed on your system:
    cd scraper
    ```
 
-2. Create a `.env` file:
+2. Create a `.env` file based on the example:
    ```bash
-   echo "FIRECRAWL_API_KEY=your_firecrawl_api_key" > .env
+   cp .env.example .env
    ```
 
-3. Replace `your_firecrawl_api_key` with your actual Firecrawl API key.
+3. Edit the `.env` file and fill in the required values:
+   - `FIRECRAWL_API_KEY`: Your Firecrawl API key
+   - Database connection details (for future implementation)
 
 ## Database Setup
 
@@ -93,10 +95,11 @@ This will start:
 
 #### Scraper
 
-To run the scraper:
+To run the scraper locally:
 
 ```bash
-npm run scrape
+cd scraper
+npm start
 ```
 
 #### API
@@ -121,16 +124,40 @@ To run the frontend development server:
 
 ```bash
 cd frontend
-npm start
+npm run dev
 ```
+
+## Deploying to Render
+
+The scraper component is designed to run on Render with scheduled executions.
+
+### Prerequisites
+
+1. Create a Render account at [render.com](https://render.com/)
+2. Fork this repository to your GitHub account
+
+### Deployment Steps
+
+1. Log in to Render and create a new Web Service
+2. Connect your GitHub repository
+3. Set the following environment variables in the Render dashboard:
+   - `FIRECRAWL_API_KEY`: Your actual Firecrawl API key
+4. Configure the build command as `npm install`
+5. Configure the start command as `node index.js`
+6. In the "Advanced" settings, add a cron job with schedule `0 2 * * *` (daily at 2 AM UTC)
+7. The scraper will automatically run daily at 2 AM UTC
+
+### Monitoring
+
+You can monitor the scraper's execution and logs through the Render dashboard.
 
 ## Project Structure
 
 The project is organized into three main components:
 
-1. **Scraper** (`/scraper`): Responsible for fetching data from various sources using the Firecrawl API.
+1. **Scraper** (`/scraper`): Responsible for fetching data from various sources using the Firecrawl API. Designed to run on Render.
 2. **API** (`/api`): Provides a RESTful interface to access the funding opportunities data.
-3. **Frontend** (`/frontend`): A React application that provides a user-friendly interface to browse and search funding opportunities.
+3. **Frontend** (`/frontend`): A Next.js application that provides a user-friendly interface to browse and search funding opportunities.
 
 ## Development Workflow
 

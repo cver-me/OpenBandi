@@ -1,0 +1,10 @@
+services:
+  - type: cron
+    name: bandi-scraper
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    schedule: "0 2 * * *"  # Run daily at 2 AM UTC
+    envVars:
+      - key: FIRECRAWL_API_KEY
+        sync: false  # This means we'll set it in the Render dashboard

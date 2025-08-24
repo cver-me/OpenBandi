@@ -43,7 +43,10 @@ The Bandi Aggregator solves this problem by:
 - **Backend**: Node.js with Express
 - **Database**: PostgreSQL
 - **Frontend**: Next.js with TypeScript and Tailwind CSS
-- **Deployment**: Vercel for frontend, AWS Lambda or similar for backend
+- **Deployment**: 
+  - Vercel for frontend
+  - Render for scraper component
+  - AWS Lambda or similar for backend API
 
 ## Getting Started
 
@@ -73,6 +76,21 @@ The Bandi Aggregator solves this problem by:
    npm run dev
    ```
 
+### Deploying the Scraper to Render
+
+The scraper component is designed to run on Render with scheduled executions:
+
+1. Create a Render account at [render.com](https://render.com/)
+2. Fork this repository to your GitHub account
+3. Log in to Render and create a new Web Service
+4. Connect your GitHub repository
+5. Set the following environment variables in the Render dashboard:
+   - `FIRECRAWL_API_KEY`: Your actual Firecrawl API key
+6. Configure the build command as `npm install`
+7. Configure the start command as `node index.js`
+8. In the "Advanced" settings, add a cron job with schedule `0 2 * * *` (daily at 2 AM UTC)
+9. The scraper will automatically run daily at 2 AM UTC
+
 For more detailed development setup instructions, please see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Project Structure
@@ -80,6 +98,11 @@ For more detailed development setup instructions, please see [DEVELOPMENT.md](DE
 ```
 bandi-aggregator/
 ├── scraper/          # Data acquisition component
+│   ├── index.js      # Main entry point
+│   ├── scraper.js    # Scraping logic
+│   ├── database.js   # Database integration (placeholder)
+│   ├── render.yaml   # Render deployment configuration
+│   └── package.json  # Dependencies
 ├── api/              # REST API backend
 ├── frontend/         # Next.js frontend application
 │   ├── src/
