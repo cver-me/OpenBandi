@@ -40,13 +40,11 @@ The Bandi Aggregator solves this problem by:
 ## Technology Stack
 
 - **Data Acquisition**: [Firecrawl API](https://www.firecrawl.dev/) for robust web scraping
-- **Backend**: Node.js with Express
 - **Database**: PostgreSQL
-- **Frontend**: Next.js with TypeScript and Tailwind CSS
+- **Frontend & API**: Next.js with TypeScript and Tailwind CSS
 - **Deployment**: 
-  - Vercel for frontend
-  - Render for scraper component
-  - AWS Lambda or similar for backend API
+  - Vercel for Next.js application (frontend + API)
+  - Render for scraper component (scheduled cron job)
 
 ## Getting Started
 
@@ -89,7 +87,18 @@ The scraper component is designed to run on Render with scheduled executions:
 6. Configure the build command as `npm install`
 7. Configure the start command as `node index.js`
 8. In the "Advanced" settings, add a cron job with schedule `0 2 * * *` (daily at 2 AM UTC)
-9. The scraper will automatically run daily at 2 AM UTC
+9. The scraper will automatically run daily at 2 AM UTC and update the database
+
+### Deploying the Next.js Application to Vercel
+
+The Next.js application serves both the frontend UI and API endpoints:
+
+1. Create a Vercel account at [vercel.com](https://vercel.com/)
+2. Connect your GitHub repository
+3. Configure environment variables:
+   - Database connection details
+4. Vercel will automatically detect the Next.js application and deploy it
+5. The application will serve both the frontend and API endpoints
 
 For more detailed development setup instructions, please see [DEVELOPMENT.md](DEVELOPMENT.md).
 
@@ -103,8 +112,7 @@ bandi-aggregator/
 │   ├── database.js   # Database integration (placeholder)
 │   ├── render.yaml   # Render deployment configuration
 │   └── package.json  # Dependencies
-├── api/              # REST API backend
-├── frontend/         # Next.js frontend application
+├── frontend/         # Next.js frontend application (frontend + API)
 │   ├── src/
 │   │   ├── app/      # App router pages
 │   │   │   ├── page.tsx (Homepage)
