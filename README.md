@@ -58,7 +58,7 @@ The Bandi Aggregator solves this problem by:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/bandi-aggregator.git
+   git clone https://github.com/cver-me/OpenBandi.git
    cd bandi-aggregator
    ```
 
