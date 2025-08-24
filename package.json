@@ -6,11 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "install-all": "npm install && cd scraper && npm install && cd ../api && npm install && cd ../frontend && npm install",
-    "dev": "concurrently \"cd api && npm run dev\" \"cd frontend && npm run dev\"",
+    "install-all": "npm install && cd scraper && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"cd scraper && npm start\" \"cd frontend && npm run dev\"",
     "scrape": "cd scraper && npm start",
     "dev:frontend": "cd frontend && npm run dev",
-    "dev:api": "cd api && npm run dev"
+    "dev:scraper": "cd scraper && npm start"
   },
   "repository": {
     "type": "git",
