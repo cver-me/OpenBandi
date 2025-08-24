@@ -42,8 +42,8 @@ The Bandi Aggregator solves this problem by:
 - **Data Acquisition**: [Firecrawl API](https://www.firecrawl.dev/) for robust web scraping
 - **Backend**: Node.js with Express
 - **Database**: PostgreSQL
-- **Frontend**: React with Bootstrap and React Bootstrap
-- **Deployment**: Vercel/Netlify for frontend, AWS Lambda or similar for backend
+- **Frontend**: Next.js with TypeScript and Tailwind CSS
+- **Deployment**: Vercel for frontend, AWS Lambda or similar for backend
 
 ## Getting Started
 
@@ -81,7 +81,14 @@ For more detailed development setup instructions, please see [DEVELOPMENT.md](DE
 bandi-aggregator/
 ├── scraper/          # Data acquisition component
 ├── api/              # REST API backend
-├── frontend/         # React frontend application
+├── frontend/         # Next.js frontend application
+│   ├── src/
+│   │   ├── app/      # App router pages
+│   │   │   ├── page.tsx (Homepage)
+│   │   │   ├── bando/[id]/page.tsx (Bando detail page)
+│   │   │   ├── layout.tsx (Root layout)
+│   │   │   └── globals.css (Global styles)
+│   │   └── components/ (Future components)
 ├── docs/             # Project documentation
 ├── README.md         # This file
 ├── LICENSE           # MIT License

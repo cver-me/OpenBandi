@@ -7,8 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "install-all": "npm install && cd scraper && npm install && cd ../api && npm install && cd ../frontend && npm install",
-    "dev": "concurrently \"cd api && npm run dev\" \"cd frontend && npm start\"",
-    "scrape": "cd scraper && npm start"
+    "dev": "concurrently \"cd api && npm run dev\" \"cd frontend && npm run dev\"",
+    "scrape": "cd scraper && npm start",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:api": "cd api && npm run dev"
   },
   "repository": {
     "type": "git",
