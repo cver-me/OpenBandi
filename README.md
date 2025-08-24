@@ -1,4 +1,4 @@
-# Bandi Aggregator
+# OpenBandi
 
 An open-source aggregator for Italian startup funding opportunities ("Bandi").
 
