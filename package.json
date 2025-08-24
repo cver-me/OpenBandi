@@ -1,0 +1,33 @@
+{
+  "name": "bandi-aggregator",
+  "version": "1.0.0",
+  "description": "An open-source aggregator for Italian startup funding opportunities (\"Bandi\").",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "install-all": "npm install && cd scraper && npm install && cd ../api && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"cd api && npm run dev\" \"cd frontend && npm start\"",
+    "scrape": "cd scraper && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/bandi-aggregator.git"
+  },
+  "keywords": [
+    "bandi",
+    "italy",
+    "startup",
+    "funding",
+    "aggregator"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/your-username/bandi-aggregator/issues"
+  },
+  "homepage": "https://github.com/your-username/bandi-aggregator#readme",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
