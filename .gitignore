@@ -16,6 +16,7 @@ node_modules/
 # Build outputs
 dist/
 build/
+/frontend/.next
 
 # IDE files
 .vscode/
@@ -31,5 +32,4 @@ build/
 .Trashes
 ehthumbs.db
 Thumbs.db
-/frontend/.next/cache
-/frontend/.next
+
