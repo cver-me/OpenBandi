@@ -31,3 +31,5 @@ build/
 .Trashes
 ehthumbs.db
 Thumbs.db
+/frontend/.next/cache
+/frontend/.next

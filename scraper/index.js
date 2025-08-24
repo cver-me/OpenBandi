@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { scrapeAllSources } = require('./scraper');
 const Database = require('./database');
 

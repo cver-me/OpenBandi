@@ -1,7 +1,7 @@
 const axios = require('axios');
 
-// Firecrawl API base URL
-const FIRECRAWL_API_URL = 'https://api.firecrawl.dev/v0';
+// Firecrawl API base URL (updated to v1)
+const FIRECRAWL_API_URL = 'https://api.firecrawl.dev/v1';
 
 // Example sources from the PRD
 const sources = [
@@ -37,67 +37,80 @@ const sources = [
   }
 ];
 
-// Function to scrape a single source using Firecrawl
-async function scrapeSource(source, apiKey) {
-  try {
-    console.log(`Scraping ${source.name}...`);
-    
-    // Scrape the page using Firecrawl
-    const response = await axios.post(
-      `${FIRECRAWL_API_URL}/scrape`,
-      {
-        url: source.url
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-    
-    // Extract structured data using Firecrawl's extract endpoint
-    const extractResponse = await axios.post(
-      `${FIRECRAWL_API_URL}/extract`,
-      {
-        data: response.data.data,
-        schema: {
-          type: 'object',
-          properties: {
-            title: { type: 'string' },
-            description: { type: 'string' },
-            deadline: { type: 'string' },
-            funding_amount: { type: 'string' },
-            eligibility: { type: 'string' }
+// Function to scrape a single source using Firecrawl with retry logic
+async function scrapeSource(source, apiKey, retries = 3) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      console.log(`Scraping ${source.name} at URL: ${source.url} (attempt ${attempt}/${retries})`);
+      
+      // Scrape the page and extract structured data in one call using Firecrawl v1 API
+      const response = await axios.post(
+        `${FIRECRAWL_API_URL}/scrape`,
+        {
+          url: source.url,
+          formats: ['markdown', 'extract'],
+          onlyMainContent: true, // Focus on main content
+          extract: {
+            schema: {
+              type: 'object',
+              properties: {
+                title: { type: 'string' },
+                description: { type: 'string' },
+                deadline: { type: 'string' },
+                funding_amount: { type: 'string' },
+                eligibility: { type: 'string' }
+              },
+              required: ['title', 'description']
+            }
+          }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
           },
-          required: ['title', 'description']
+          timeout: 60000 // Increased timeout to 60 seconds for slow sites
         }
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'Content-Type': 'application/json'
-        }
+      );
+      
+      console.log(`Received response for ${source.name}:`, response.status);
+      
+      // Check if the scrape was successful
+      if (response.data.success !== true) {
+        throw new Error(`Scraping failed for ${source.name}: ${response.data.error || 'Unknown error'}`);
       }
-    );
-    
-    console.log(`Successfully scraped ${source.name}`);
-    return {
-      source: source.name,
-      tier: source.tier,
-      url: source.url,
-      scraped_at: new Date().toISOString(),
-      data: extractResponse.data.data
-    };
-  } catch (error) {
-    console.error(`Error scraping ${source.name}:`, error.message);
-    return {
-      source: source.name,
-      tier: source.tier,
-      url: source.url,
-      scraped_at: new Date().toISOString(),
-      error: error.message
-    };
+      
+      // Log extracted data for verification
+      console.log(`Extracted data for ${source.name}:`, JSON.stringify(response.data.data.extract, null, 2));
+      
+      console.log(`Successfully scraped and extracted data for ${source.name}`);
+      return {
+        source: source.name,
+        tier: source.tier,
+        url: source.url,
+        scraped_at: new Date().toISOString(),
+        data: response.data.data.extract || response.data.data
+      };
+    } catch (error) {
+      console.error(`Error scraping ${source.name} (attempt ${attempt}/${retries}):`, error.message);
+      if (error.response) {
+        console.error(`Response data for ${source.name}:`, JSON.stringify(error.response.data, null, 2));
+      }
+      
+      // If this was the last attempt, return the error
+      if (attempt === retries) {
+        return {
+          source: source.name,
+          tier: source.tier,
+          url: source.url,
+          scraped_at: new Date().toISOString(),
+          error: error.message
+        };
+      }
+      
+      // Wait before retrying
+      await new Promise(resolve => setTimeout(resolve, 5000 * attempt));
+    }
   }
 }
 
@@ -112,7 +125,7 @@ async function scrapeAllSources(apiKey) {
     results.push(result);
     
     // Add a delay to be respectful to the servers
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 3000));
   }
   
   console.log(`Scraping process completed. Processed ${results.length} sources.`);
